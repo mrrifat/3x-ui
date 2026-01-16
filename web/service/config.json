@@ -53,7 +53,7 @@
       "tag": "direct",
       "protocol": "freedom",
       "settings": {
-        "domainStrategy": "AsIs",
+        "domainStrategy": "UseIP",
         "redirect": "",
         "noises": []
       }
@@ -97,13 +97,6 @@
         "type": "field",
         "outboundTag": "direct",
         "ip": ["geoip:cn", "geoip:private"]
-      },
-      {
-        "type": "field",
-        "outboundTag": "blocked",
-        "ip": [
-          "geoip:private"
-        ]
       },
       {
         "type": "field",
