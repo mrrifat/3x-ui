@@ -1,0 +1,21 @@
+{
+  "dns": {
+    "servers": [
+      {
+        "address": "tls://1.1.1.1",
+        "skipFallback": false
+      },
+      {
+        "address": "tls://1.0.0.1",
+        "skipFallback": false
+      },
+      {
+        "address": "1.1.1.1",
+        "skipFallback": false
+      }
+    ],
+    "queryStrategy": "UseIPv4",
+    "disableCache": false,
+    "disableFallback": false
+  }
+}

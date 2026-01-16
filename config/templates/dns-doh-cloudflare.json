@@ -1,0 +1,21 @@
+{
+  "dns": {
+    "servers": [
+      {
+        "address": "https://1.1.1.1/dns-query",
+        "skipFallback": false
+      },
+      {
+        "address": "https://1.0.0.1/dns-query",
+        "skipFallback": false
+      },
+      {
+        "address": "1.1.1.1",
+        "skipFallback": false
+      }
+    ],
+    "queryStrategy": "UseIPv4",
+    "disableCache": false,
+    "disableFallback": false
+  }
+}
