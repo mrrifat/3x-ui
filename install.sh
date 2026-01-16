@@ -702,13 +702,23 @@ install_x-ui() {
     
     # Download resources
     if [ $# == 0 ]; then
+        # First try to get latest version tag
         tag_version=$(curl -Ls "https://api.github.com/repos/mrrifat/3x-ui/releases/latest" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/')
+        
+        # If no releases found, use default version
+        if [[ ! -n "$tag_version" ]]; then
+            echo -e "${yellow}No release found, checking for china-optimized version...${plain}"
+            tag_version="v2.5.2-china"
+        fi
+        
         if [[ ! -n "$tag_version" ]]; then
             echo -e "${yellow}Trying to fetch version with IPv4...${plain}"
             tag_version=$(curl -4 -Ls "https://api.github.com/repos/mrrifat/3x-ui/releases/latest" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/')
+            
+            # Fallback to default version
             if [[ ! -n "$tag_version" ]]; then
-                echo -e "${red}Failed to fetch x-ui version, it may be due to GitHub API restrictions, please try it later${plain}"
-                exit 1
+                echo -e "${yellow}Using default version v2.5.2-china${plain}"
+                tag_version="v2.5.2-china"
             fi
         fi
         echo -e "Got x-ui latest version: ${tag_version}, beginning the installation..."

@@ -43,6 +43,21 @@ bash <(curl -Ls https://raw.githubusercontent.com/mrrifat/3x-ui/main/install.sh)
 - ✅ Optimized routing rules (Chinese traffic direct)
 - ✅ Protocol templates (VLESS Reality, VMess/Trojan WS+TLS)
 
+## 📦 Releases
+
+### Latest China-Optimized Release: v2.5.2-china
+
+**Download binaries:**
+- [amd64](https://github.com/mrrifat/3x-ui/releases/download/v2.5.2-china/x-ui-linux-amd64.tar.gz)
+- [arm64](https://github.com/mrrifat/3x-ui/releases/download/v2.5.2-china/x-ui-linux-arm64.tar.gz)
+- [armv7](https://github.com/mrrifat/3x-ui/releases/download/v2.5.2-china/x-ui-linux-armv7.tar.gz)
+- [All platforms](https://github.com/mrrifat/3x-ui/releases/latest)
+
+**Install specific version:**
+```bash
+bash <(curl -Ls https://raw.githubusercontent.com/mrrifat/3x-ui/main/install.sh) v2.5.2-china
+```
+
 ### First Login
 
 ```bash
