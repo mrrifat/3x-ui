@@ -78,10 +78,21 @@ Password: admin
 ### Step 3: Test Connection
 
 1. Import inbound link to your client (v2rayN, Clash, etc.)
-2. Test Chinese site: `curl -x socks5://127.0.0.1:10808 baidu.com` (~10ms)
-3. Test international site: `curl -x socks5://127.0.0.1:10808 google.com` (~50ms)
+2. Configure your client to use the proxy (typically SOCKS5 on port 10808 or HTTP on port 10809)
+3. Test Chinese site:
+   ```bash
+   # If using SOCKS5 proxy on port 10808
+   curl -x socks5://127.0.0.1:10808 baidu.com
+   ```
+4. Test international site:
+   ```bash
+   curl -x socks5://127.0.0.1:10808 google.com
+   ```
 
 ✅ **Both work?** - You're all set!
+
+> [!NOTE]
+> The proxy port (10808) may vary depending on your client configuration. Check your client settings for the correct port.
 
 ---
 

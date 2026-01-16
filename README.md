@@ -145,7 +145,6 @@ x-ui geo
 |-------------|------------|---------|------------|
 | Chinese (baidu.com) | AliDNS | ~10ms | None (fastest) |
 | International (google.com) | ControlD DoH | ~50ms | HTTPS (secure) |
-| Adult sites (ixxx.com) | ControlD DoH | ~48ms | HTTPS (filtered) |
 
 **Comparison with Non-Split DNS:**
 | Domain | Without Split DNS | With Split DNS | Improvement |
