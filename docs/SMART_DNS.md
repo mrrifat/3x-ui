@@ -50,8 +50,8 @@ The Smart Split DNS feature intelligently routes DNS queries based on the geogra
   "servers": [
     { "address": "223.5.5.5", "domains": ["geosite:cn"], "expectIPs": ["geoip:cn"] },
     { "address": "119.29.29.29", "domains": ["geosite:cn"], "expectIPs": ["geoip:cn"] },
-    { "address": "https://dns.controld.com/YOUR_ENDPOINT_ID", "domains": ["geosite:geolocation-!cn"] },
-    { "address": "YOUR_ENDPOINT_ID.dns.controld.com" },
+    { "address": "https://dns.controld.com/YOUR_ENDPOINT", "domains": ["geosite:geolocation-!cn"] },
+    { "address": "YOUR_ENDPOINT.dns.controld.com" },
     { "address": "https://1.1.1.1/dns-query" },
     { "address": "1.1.1.1" }
   ]
@@ -63,8 +63,8 @@ The Smart Split DNS feature intelligently routes DNS queries based on the geogra
 2. Create a custom endpoint with your filtering rules
 3. Copy your endpoint ID (e.g., `abc123xyz`)
 4. Replace `YOUR_ENDPOINT` with your endpoint ID in both:
-   - `https://dns.controld.com/YOUR_ENDPOINT_ID`
-   - `YOUR_ENDPOINT_ID.dns.controld.com`
+   - `https://dns.controld.com/YOUR_ENDPOINT`
+   - `YOUR_ENDPOINT.dns.controld.com`
 
 ### 3. AliDNS DoH (China Optimized)
 **Best for:** Users who trust Alibaba's DoH service
@@ -130,7 +130,7 @@ User requests example.xxx
   ↓
 Xray checks: geosite:cn? NO
   ↓
-Routes to: https://dns.controld.com/YOUR_ENDPOINT_ID
+Routes to: https://dns.controld.com/YOUR_ENDPOINT
   ↓
 ControlD applies custom filtering
   ↓
