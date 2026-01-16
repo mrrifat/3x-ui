@@ -42,18 +42,29 @@ The Smart Split DNS feature intelligently routes DNS queries based on the geogra
 
 ### 2. ControlD Custom (Smart Split)
 **Best for:** Users who want custom filtering for international sites
+
+> **⚠️ Note:** The ControlD endpoint `20m7ehw60mm` is a placeholder example. You must replace it with your own ControlD endpoint ID from [controld.com](https://controld.com).
+
 ```json
 {
   "servers": [
     { "address": "223.5.5.5", "domains": ["geosite:cn"], "expectIPs": ["geoip:cn"] },
     { "address": "119.29.29.29", "domains": ["geosite:cn"], "expectIPs": ["geoip:cn"] },
-    { "address": "https://dns.controld.com/20m7ehw60mm", "domains": ["geosite:geolocation-!cn"] },
-    { "address": "20m7ehw60mm.dns.controld.com" },
+    { "address": "https://dns.controld.com/YOUR_ENDPOINT_ID", "domains": ["geosite:geolocation-!cn"] },
+    { "address": "YOUR_ENDPOINT_ID.dns.controld.com" },
     { "address": "https://1.1.1.1/dns-query" },
     { "address": "1.1.1.1" }
   ]
 }
 ```
+
+**To use ControlD:**
+1. Sign up at [controld.com](https://controld.com)
+2. Create a custom endpoint with your filtering rules
+3. Copy your endpoint ID (e.g., `abc123xyz`)
+4. Replace `20m7ehw60mm` with your endpoint ID in both:
+   - `https://dns.controld.com/YOUR_ENDPOINT_ID`
+   - `YOUR_ENDPOINT_ID.dns.controld.com`
 
 ### 3. AliDNS DoH (China Optimized)
 **Best for:** Users who trust Alibaba's DoH service
