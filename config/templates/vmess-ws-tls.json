@@ -1,0 +1,30 @@
+{
+  "protocol": "vmess",
+  "listen": "0.0.0.0",
+  "port": 443,
+  "settings": {
+    "clients": []
+  },
+  "streamSettings": {
+    "network": "ws",
+    "security": "tls",
+    "wsSettings": {
+      "path": "/",
+      "headers": {}
+    },
+    "tlsSettings": {
+      "serverName": "",
+      "certificates": [
+        {
+          "certificateFile": "",
+          "keyFile": ""
+        }
+      ],
+      "alpn": ["h2", "http/1.1"]
+    }
+  },
+  "sniffing": {
+    "enabled": true,
+    "destOverride": ["http", "tls", "quic"]
+  }
+}

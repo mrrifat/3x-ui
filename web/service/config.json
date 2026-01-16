@@ -6,6 +6,29 @@
     "loglevel": "warning",
     "maskAddress": ""
   },
+  "dns": {
+    "servers": [
+      {
+        "address": "223.5.5.5",
+        "domains": ["geosite:cn"],
+        "expectIPs": ["geoip:cn"]
+      },
+      {
+        "address": "119.29.29.29",
+        "domains": ["geosite:cn"],
+        "expectIPs": ["geoip:cn"]
+      },
+      {
+        "address": "p2.freedns.controld.com",
+        "port": 5353
+      },
+      {
+        "address": "8.8.8.8"
+      }
+    ],
+    "queryStrategy": "UseIPv4",
+    "tag": "dns_inbound"
+  },
   "api": {
     "tag": "api",
     "services": [
@@ -56,7 +79,7 @@
     }
   },
   "routing": {
-    "domainStrategy": "AsIs",
+    "domainStrategy": "IPIfNonMatch",
     "rules": [
       {
         "type": "field",
@@ -64,6 +87,16 @@
           "api"
         ],
         "outboundTag": "api"
+      },
+      {
+        "type": "field",
+        "outboundTag": "direct",
+        "domain": ["geosite:cn", "geosite:private"]
+      },
+      {
+        "type": "field",
+        "outboundTag": "direct",
+        "ip": ["geoip:cn", "geoip:private"]
       },
       {
         "type": "field",

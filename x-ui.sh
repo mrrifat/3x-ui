@@ -893,6 +893,7 @@ update_all_geofiles() {
     update_geofiles "main"
     update_geofiles "IR"
     update_geofiles "RU"
+    update_geofiles "CN"
 }
 
 update_geofiles() {
@@ -900,6 +901,7 @@ update_geofiles() {
       "main") dat_files=(geoip geosite); dat_source="Loyalsoldier/v2ray-rules-dat";;
         "IR") dat_files=(geoip_IR geosite_IR); dat_source="chocolate4u/Iran-v2ray-rules" ;;
         "RU") dat_files=(geoip_RU geosite_RU); dat_source="runetfreedom/russia-v2ray-rules-dat";;
+        "CN") dat_files=(geoip_CN geosite_CN); dat_source="Loyalsoldier/v2ray-rules-dat";;
     esac
     for dat in "${dat_files[@]}"; do
         # Remove suffix for remote filename (e.g., geoip_IR -> geoip)
@@ -914,6 +916,7 @@ update_geo() {
     echo -e "${green}\t2.${plain} chocolate4u (geoip_IR.dat, geosite_IR.dat)"
     echo -e "${green}\t3.${plain} runetfreedom (geoip_RU.dat, geosite_RU.dat)"
     echo -e "${green}\t4.${plain} All"
+    echo -e "${green}\t5.${plain} China (geoip_CN.dat, geosite_CN.dat)"
     echo -e "${green}\t0.${plain} Back to Main Menu"
     read -rp "Choose an option: " choice
 
@@ -939,6 +942,11 @@ update_geo() {
     4)
         update_all_geofiles
         echo -e "${green}All geo files have been updated successfully!${plain}"
+        restart
+        ;;
+    5)
+        update_geofiles "CN"
+        echo -e "${green}China datasets have been updated successfully!${plain}"
         restart
         ;;
     *)
