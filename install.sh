@@ -10,6 +10,7 @@ cur_dir=$(pwd)
 
 xui_folder="${XUI_MAIN_FOLDER:=/usr/local/x-ui}"
 xui_service="${XUI_SERVICE:=/etc/systemd/system}"
+default_version="v2.5.2-china"
 
 # check root
 [[ $EUID -ne 0 ]] && echo -e "${red}Fatal error: ${plain} Please run this script with root privilege \n " && exit 1
@@ -708,7 +709,7 @@ install_x-ui() {
         # If no releases found, use default version
         if [[ ! -n "$tag_version" ]]; then
             echo -e "${yellow}No release found, checking for china-optimized version...${plain}"
-            tag_version="v2.5.2-china"
+            tag_version="$default_version"
         fi
         
         if [[ ! -n "$tag_version" ]]; then
@@ -717,8 +718,8 @@ install_x-ui() {
             
             # Fallback to default version
             if [[ ! -n "$tag_version" ]]; then
-                echo -e "${yellow}Using default version v2.5.2-china${plain}"
-                tag_version="v2.5.2-china"
+                echo -e "${yellow}Using default version $default_version${plain}"
+                tag_version="$default_version"
             fi
         fi
         echo -e "Got x-ui latest version: ${tag_version}, beginning the installation..."

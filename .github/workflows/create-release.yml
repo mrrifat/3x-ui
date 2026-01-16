@@ -74,8 +74,6 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v5
-        with:
-          ref: ${{ github.event.inputs.version }}
 
       - name: Setup Go
         uses: actions/setup-go@v6
