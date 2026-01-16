@@ -111,9 +111,9 @@ x-ui
 3x-ui is **pre-configured with DoH by default**:
 
 **Server DNS** (`web/service/config.json`):
-- Chinese domains → 223.5.5.5 (AliDNS)
-- Foreign domains → https://223.5.5.5/dns-query (DoH)
-- Fallback → https://1.1.1.1/dns-query (Cloudflare DoH)
+- Chinese domains → 223.5.5.5 (AliDNS traditional)
+- Foreign domains → https://1.1.1.1/dns-query (Cloudflare DoH)
+- Fallback → https://8.8.8.8/dns-query (Google DoH)
 - Final fallback → 8.8.8.8 (Google DNS)
 
 **Client DNS** (`sub/default.json`):
@@ -365,8 +365,8 @@ nslookup github.com
     "servers": [
       { "address": "223.5.5.5", "domains": ["geosite:cn"] },
       { "address": "119.29.29.29", "domains": ["geosite:cn"] },
-      { "address": "https://223.5.5.5/dns-query", "domains": ["geosite:geolocation-!cn"] },
-      { "address": "https://1.1.1.1/dns-query" },
+      { "address": "https://1.1.1.1/dns-query", "domains": ["geosite:geolocation-!cn"] },
+      { "address": "https://8.8.8.8/dns-query" },
       "1.1.1.1",
       "8.8.8.8"
     ],
