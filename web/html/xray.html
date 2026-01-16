@@ -999,9 +999,16 @@
         const preset = this.dnsProviderPresets[this.selectedDnsProvider];
         if (!preset) return;
         
-        // Simple test - just show a confirmation
-        Vue.prototype.$message.loading('Testing DNS provider...', 2).then(() => {
-          Vue.prototype.$message.success(`${preset.name} is configured correctly`);
+        if (this.selectedDnsProvider === 'custom') {
+          Vue.prototype.$message.info('Custom configuration - apply and save to test');
+          return;
+        }
+        
+        // Show information about what will be tested
+        const serverCount = preset.servers.length;
+        Vue.prototype.$message.info({
+          content: `Testing ${preset.name} with ${serverCount} DNS server${serverCount > 1 ? 's' : ''}. Apply and save changes to activate.`,
+          duration: 3
         });
       },
       addFakedns() {

@@ -93,11 +93,15 @@ The 3x-ui web panel now includes a user-friendly DNS provider selector that allo
 
 ### Testing Your Configuration
 
-After applying a DNS provider:
-1. Click the **Test** button to verify configuration
-2. The system will show a success message if DNS is working
-3. Save your settings using the **Save** button at the top
-4. Restart Xray using the **Restart** button
+The Test button provides information about the selected DNS provider:
+1. Click the **Test** button to see provider details
+2. It will show the number of DNS servers that will be configured
+3. **Important**: To actually test DNS functionality:
+   - Click **Apply** to configure the DNS servers
+   - Click **Save** at the top to persist changes
+   - Click **Restart** to restart Xray with new DNS settings
+   - Verify connectivity through your proxy
+4. The Test button is informational only - it does not perform live DNS queries
 
 ### Viewing Active DNS Servers
 
