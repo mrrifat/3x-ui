@@ -19,15 +19,25 @@
         "expectIPs": ["geoip:cn"]
       },
       {
-        "address": "p2.freedns.controld.com",
-        "port": 5353
+        "address": "https://223.5.5.5/dns-query",
+        "domains": ["geosite:geolocation-!cn"],
+        "queryStrategy": "UseIPv4"
       },
       {
-        "address": "8.8.8.8"
-      }
+        "address": "https://1.1.1.1/dns-query",
+        "skipFallback": false
+      },
+      {
+        "address": "https://8.8.8.8/dns-query",
+        "skipFallback": false
+      },
+      "p2.freedns.controld.com",
+      "8.8.8.8"
     ],
     "queryStrategy": "UseIPv4",
-    "tag": "dns_inbound"
+    "tag": "dns_inbound",
+    "disableCache": false,
+    "disableFallback": false
   },
   "api": {
     "tag": "api",
@@ -53,7 +63,7 @@
       "tag": "direct",
       "protocol": "freedom",
       "settings": {
-        "domainStrategy": "AsIs",
+        "domainStrategy": "UseIP",
         "redirect": "",
         "noises": []
       }

@@ -48,3 +48,96 @@ These templates are optimized for reliability and speed in China's network envir
 - Chinese domains/IPs: Direct connection (bypass proxy)
 - International: Through proxy
 - Private IPs: Blocked
+
+---
+
+## DNS Configuration Templates
+
+### DoH (DNS over HTTPS) Templates
+
+#### dns-doh-cloudflare.json
+- **Best for**: Privacy, global access
+- **Latency**: ~100ms from China
+- **Works**: Excellent in most regions
+- **Use case**: When privacy is priority
+
+#### dns-doh-google.json
+- **Best for**: Speed, reliability
+- **Latency**: ~150ms from China
+- **Works**: May be slower in China
+- **Use case**: General purpose, non-China
+
+#### dns-doh-alidns.json ⭐ RECOMMENDED FOR CHINA
+- **Best for**: China users, speed
+- **Latency**: ~50ms from China
+- **Works**: Optimized for China network
+- **Use case**: Primary choice for China-based users
+
+### DoT (DNS over TLS) Templates
+
+#### dns-dot-cloudflare.json
+- **Best for**: Maximum privacy
+- **Latency**: ~80ms
+- **Works**: May be blocked (port 853)
+- **Use case**: When DoH is blocked
+
+#### dns-dot-google.json
+- **Best for**: Speed
+- **Latency**: ~100ms
+- **Works**: May be blocked (port 853)
+- **Use case**: Alternative to Google DoH
+
+### Hybrid Template
+
+#### dns-hybrid-china.json ⭐ DEFAULT CONFIGURATION
+- **Best for**: Maximum reliability
+- **Combines**: Traditional DNS + DoH + DoT
+- **Works**: Everywhere
+- **Use case**: Default for all users
+
+---
+
+## Quick Setup
+
+### Apply DoH Configuration:
+
+```bash
+# 1. Navigate to templates
+cd /usr/local/x-ui/config/templates
+
+# 2. View template
+cat dns-doh-alidns.json
+
+# 3. Copy DNS section to your config
+nano /usr/local/x-ui/web/service/config.json
+# Paste the "dns" section from template
+
+# 4. Restart
+x-ui restart
+```
+
+### Test Configuration:
+
+```bash
+# Check DNS is working
+nslookup google.com
+nslookup baidu.com
+
+# Check logs for DoH queries
+x-ui log | grep "dns"
+```
+
+---
+
+## Performance Tips
+
+1. **Use AliDNS DoH for China** - Fastest resolution
+2. **Enable DNS caching** - Reduces repeated queries
+3. **Use hybrid config** - Best reliability
+4. **Multiple fallbacks** - Prevents timeout
+5. **Traditional DNS for CN domains** - Fastest for domestic sites
+
+---
+
+For detailed information, see: `docs/CHINA-OPTIMIZATION.md`
+
