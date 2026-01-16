@@ -245,7 +245,7 @@ x-ui log | grep "dns query"
 # Test domain resolution
 nslookup google.com
 nslookup baidu.com
-nslookup www.ixxx.com
+nslookup www.github.com
 
 # Should resolve in < 500ms
 ```
