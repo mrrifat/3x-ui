@@ -79,12 +79,12 @@
       name: 'ControlD Custom (Smart Split)',
       family: false,
       type: 'Split DNS (Traditional CN + Custom DoH)',
-      description: 'Chinese domains → AliDNS ~10ms ⚡ | International domains → ControlD DoH (replace 20m7ehw60mm with your endpoint) ~50ms 🔒',
+      description: 'Chinese domains → AliDNS ~10ms ⚡ | International domains → ControlD DoH (⚠️ Replace YOUR_ENDPOINT with your ControlD ID) ~50ms 🔒',
       data: [
         { address: "223.5.5.5", domains: ["geosite:cn"], expectIPs: ["geoip:cn"] },
         { address: "119.29.29.29", domains: ["geosite:cn"], expectIPs: ["geoip:cn"] },
-        { address: "https://dns.controld.com/20m7ehw60mm", domains: ["geosite:geolocation-!cn"] },
-        { address: "20m7ehw60mm.dns.controld.com" },
+        { address: "https://dns.controld.com/YOUR_ENDPOINT", domains: ["geosite:geolocation-!cn"] },
+        { address: "YOUR_ENDPOINT.dns.controld.com" },
         { address: "https://1.1.1.1/dns-query" },
         { address: "1.1.1.1" }
       ]

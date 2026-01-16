@@ -130,7 +130,7 @@ User requests example.xxx
   ↓
 Xray checks: geosite:cn? NO
   ↓
-Routes to: https://dns.controld.com/20m7ehw60mm
+Routes to: https://dns.controld.com/YOUR_ENDPOINT_ID
   ↓
 ControlD applies custom filtering
   ↓
