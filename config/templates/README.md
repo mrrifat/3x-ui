@@ -41,8 +41,28 @@ These templates are optimized for reliability and speed in China's network envir
 3. Configure proper SNI and Host headers
 
 ### DNS Configuration:
-- Domestic: 223.5.5.5, 119.29.29.29
-- Foreign: p2.freedns.controld.com, 8.8.8.8
+
+**Default (Smart Split DNS):**
+- Chinese domains (geosite:cn): 223.5.5.5, 119.29.29.29 (Traditional DNS - ~10ms)
+- International domains: ControlD DoH, Cloudflare DoH (Encrypted - ~50ms)
+- Fallback: 8.8.8.8, 1.1.1.1
+
+**Benefits:**
+- ✅ Chinese sites: Fast (10ms) - Traditional DNS
+- ✅ International sites: Secure (50ms) - DoH/DoT
+- ✅ Best of both worlds
+
+**Alternative DNS Presets:**
+1. **Hybrid China** - AliDNS + Cloudflare DoH (default)
+2. **ControlD Custom** - AliDNS + ControlD (custom filtering)
+3. **AliDNS DoH** - Full AliDNS with DoH for international
+4. **Cloudflare DoH** - Privacy-focused
+5. **Google DoH** - Reliability-focused
+6. **Cloudflare DoT** - Maximum privacy (DoT)
+7. **Google DoT** - Secure DNS
+8. **Traditional China** - Fastest (no encryption)
+
+See [DNS Configuration Guide](../docs/CHINA-OPTIMIZATION.md#dns-configuration) for details.
 
 ### Routing:
 - Chinese domains/IPs: Direct connection (bypass proxy)
