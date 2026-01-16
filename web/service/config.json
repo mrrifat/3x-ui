@@ -19,13 +19,9 @@
         "expectIPs": ["geoip:cn"]
       },
       {
-        "address": "https://223.5.5.5/dns-query",
+        "address": "https://1.1.1.1/dns-query",
         "domains": ["geosite:geolocation-!cn"],
         "queryStrategy": "UseIPv4"
-      },
-      {
-        "address": "https://1.1.1.1/dns-query",
-        "skipFallback": false
       },
       {
         "address": "https://8.8.8.8/dns-query",
