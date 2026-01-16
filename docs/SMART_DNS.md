@@ -43,7 +43,7 @@ The Smart Split DNS feature intelligently routes DNS queries based on the geogra
 ### 2. ControlD Custom (Smart Split)
 **Best for:** Users who want custom filtering for international sites
 
-> **⚠️ Note:** The ControlD endpoint `20m7ehw60mm` is a placeholder example. You must replace it with your own ControlD endpoint ID from [controld.com](https://controld.com).
+> **⚠️ Note:** The ControlD endpoint `YOUR_ENDPOINT` is a placeholder. You must replace it with your own ControlD endpoint ID from [controld.com](https://controld.com).
 
 ```json
 {
@@ -62,7 +62,7 @@ The Smart Split DNS feature intelligently routes DNS queries based on the geogra
 1. Sign up at [controld.com](https://controld.com)
 2. Create a custom endpoint with your filtering rules
 3. Copy your endpoint ID (e.g., `abc123xyz`)
-4. Replace `20m7ehw60mm` with your endpoint ID in both:
+4. Replace `YOUR_ENDPOINT` with your endpoint ID in both:
    - `https://dns.controld.com/YOUR_ENDPOINT_ID`
    - `YOUR_ENDPOINT_ID.dns.controld.com`
 

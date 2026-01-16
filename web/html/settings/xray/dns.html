@@ -127,7 +127,7 @@
                         <template slot="expectIPs" slot-scope="dns,index">
                             <div v-if="typeof dns == 'object' && dns.expectIPs && dns.expectIPs.length > 0" :style="{ display: 'flex', alignItems: 'center', gap: '4px', flexWrap: 'wrap' }">
                                 <template v-for="ip in dns.expectIPs">
-                                    <a-tag v-if="ip.includes('geoip:cn')" color="orange" :style="{ fontSize: '10px', margin: '2px' }">
+                                    <a-tag v-if="ip === 'geoip:cn'" color="orange" :style="{ fontSize: '10px', margin: '2px' }">
                                         🇨🇳 CN IPs
                                     </a-tag>
                                     <span v-else :style="{ fontSize: '11px', margin: '2px' }">[[ ip ]]</span>
