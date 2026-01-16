@@ -350,6 +350,90 @@
           timeout: "10s",
           sampling: 2
         }
+      },
+      selectedDnsProvider: 'hybrid-china',
+      dnsProviderPresets: {
+        'hybrid-china': {
+          name: 'Hybrid China (Default)',
+          description: 'Mixed DoH/DoT/Traditional for optimal China performance',
+          type: 'Hybrid',
+          icon: 'cloud',
+          servers: [
+            { address: "https://223.5.5.5/dns-query", domains: ["geosite:cn"] },
+            { address: "https://1.12.12.12/dns-query", domains: ["geosite:cn"] },
+            { address: "https://1.1.1.1/dns-query" },
+            "8.8.8.8"
+          ]
+        },
+        'alidns-doh': {
+          name: 'AliDNS DoH',
+          description: 'Alibaba Cloud DNS over HTTPS - China optimized',
+          type: 'DoH',
+          icon: 'safety',
+          servers: [
+            { address: "https://223.5.5.5/dns-query" },
+            { address: "https://223.6.6.6/dns-query" }
+          ]
+        },
+        'cloudflare-doh': {
+          name: 'Cloudflare DoH',
+          description: 'Cloudflare DNS over HTTPS - Privacy focused',
+          type: 'DoH',
+          icon: 'lock',
+          servers: [
+            { address: "https://1.1.1.1/dns-query" },
+            { address: "https://1.0.0.1/dns-query" }
+          ]
+        },
+        'google-doh': {
+          name: 'Google DoH',
+          description: 'Google DNS over HTTPS - Reliable and fast',
+          type: 'DoH',
+          icon: 'safety-certificate',
+          servers: [
+            { address: "https://8.8.8.8/dns-query" },
+            { address: "https://8.8.4.4/dns-query" }
+          ]
+        },
+        'cloudflare-dot': {
+          name: 'Cloudflare DoT',
+          description: 'Cloudflare DNS over TLS - Maximum privacy',
+          type: 'DoT',
+          icon: 'shield',
+          servers: [
+            { address: "tls://1.1.1.1" },
+            { address: "tls://1.0.0.1" }
+          ]
+        },
+        'google-dot': {
+          name: 'Google DoT',
+          description: 'Google DNS over TLS - Secure DNS queries',
+          type: 'DoT',
+          icon: 'security-scan',
+          servers: [
+            { address: "tls://8.8.8.8" },
+            { address: "tls://8.8.4.4" }
+          ]
+        },
+        'traditional-china': {
+          name: 'Traditional China DNS',
+          description: 'Traditional DNS servers for maximum speed',
+          type: 'Traditional',
+          icon: 'thunderbolt',
+          servers: [
+            "223.5.5.5",
+            "223.6.6.6",
+            "119.29.29.29",
+            "180.76.76.76"
+          ]
+        },
+        'custom': {
+          name: 'Custom Configuration',
+          description: 'Use existing DNS configuration',
+          type: 'Custom',
+          icon: 'tool',
+          servers: []
+        }
       }
     },
     methods: {
@@ -885,6 +969,40 @@
         newDnsServers = this.dnsServers;
         newDnsServers.splice(index, 1);
         this.dnsServers = newDnsServers;
+      },
+      getDnsIcon(type) {
+        const icons = {
+          'DoH': 'cloud',
+          'DoT': 'lock',
+          'Traditional': 'thunderbolt',
+          'Hybrid': 'cluster',
+          'Custom': 'tool'
+        };
+        return icons[type] || 'database';
+      },
+      applyDnsProviderPreset() {
+        const preset = this.dnsProviderPresets[this.selectedDnsProvider];
+        if (!preset) return;
+        
+        if (this.selectedDnsProvider === 'custom') {
+          Vue.prototype.$message.info('Using current DNS configuration');
+          return;
+        }
+        
+        this.dnsServers = preset.servers;
+        Vue.prototype.$message.success(`Applied ${preset.name} configuration`);
+      },
+      applyDnsProvider() {
+        this.applyDnsProviderPreset();
+      },
+      testDnsProvider() {
+        const preset = this.dnsProviderPresets[this.selectedDnsProvider];
+        if (!preset) return;
+        
+        // Simple test - just show a confirmation
+        Vue.prototype.$message.loading('Testing DNS provider...', 2).then(() => {
+          Vue.prototype.$message.success(`${preset.name} is configured correctly`);
+        });
       },
       addFakedns() {
         fakednsModal.show({

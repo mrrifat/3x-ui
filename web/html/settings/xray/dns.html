@@ -74,6 +74,62 @@
         </template>
     </a-collapse-panel>
     <template v-if="enableDNS">
+        <a-collapse-panel key="dns-provider" header='DNS Provider Selector'>
+            <a-space direction="vertical" size="large" :style="{ width: '100%' }">
+                <a-row :gutter="16">
+                    <a-col :xs="24" :sm="24" :md="16">
+                        <a-card :title="'Select DNS Provider'" :bordered="true" size="small">
+                            <a-select v-model="selectedDnsProvider" :style="{ width: '100%' }" 
+                                :dropdown-class-name="themeSwitcher.currentTheme"
+                                placeholder="Choose a DNS provider">
+                                <a-select-option v-for="(preset, key) in dnsProviderPresets" :key="key" :value="key">
+                                    <a-icon :type="getDnsIcon(preset.type)"></a-icon>
+                                    <span :style="{ marginLeft: '8px' }">[[ preset.name ]]</span>
+                                </a-select-option>
+                            </a-select>
+                            <a-space :style="{ marginTop: '12px', width: '100%' }" direction="horizontal">
+                                <a-button type="primary" icon="check" @click="applyDnsProvider">
+                                    Apply
+                                </a-button>
+                                <a-button type="default" icon="experiment" @click="testDnsProvider">
+                                    Test
+                                </a-button>
+                            </a-space>
+                        </a-card>
+                    </a-col>
+                    <a-col :xs="24" :sm="24" :md="8">
+                        <a-card :title="'Provider Information'" :bordered="true" size="small" v-if="dnsProviderPresets[selectedDnsProvider]">
+                            <a-space direction="vertical" size="small" :style="{ width: '100%' }">
+                                <div>
+                                    <a-tag :color="dnsProviderPresets[selectedDnsProvider].type === 'DoH' ? 'blue' : 
+                                                   dnsProviderPresets[selectedDnsProvider].type === 'DoT' ? 'green' : 
+                                                   dnsProviderPresets[selectedDnsProvider].type === 'Hybrid' ? 'purple' :
+                                                   dnsProviderPresets[selectedDnsProvider].type === 'Traditional' ? 'orange' : 'default'">
+                                        [[ dnsProviderPresets[selectedDnsProvider].type ]]
+                                    </a-tag>
+                                </div>
+                                <a-typography-text type="secondary" :style="{ fontSize: '13px' }">
+                                    [[ dnsProviderPresets[selectedDnsProvider].description ]]
+                                </a-typography-text>
+                                <a-divider :style="{ margin: '8px 0' }"></a-divider>
+                                <div v-if="dnsProviderPresets[selectedDnsProvider].servers.length > 0">
+                                    <a-typography-text strong :style="{ fontSize: '12px' }">DNS Servers:</a-typography-text>
+                                    <ul :style="{ paddingLeft: '20px', margin: '4px 0', fontSize: '12px' }">
+                                        <li v-for="(server, idx) in dnsProviderPresets[selectedDnsProvider].servers.slice(0, 3)" :key="idx">
+                                            <span v-if="typeof server === 'object'">[[ server.address ]]</span>
+                                            <span v-else>[[ server ]]</span>
+                                        </li>
+                                        <li v-if="dnsProviderPresets[selectedDnsProvider].servers.length > 3">
+                                            ... and [[ dnsProviderPresets[selectedDnsProvider].servers.length - 3 ]] more
+                                        </li>
+                                    </ul>
+                                </div>
+                            </a-space>
+                        </a-card>
+                    </a-col>
+                </a-row>
+            </a-space>
+        </a-collapse-panel>
         <a-collapse-panel key="2" header='DNS'>
             <template v-if="dnsServers.length > 0">
                 <a-space direction="vertical" size="middle">
