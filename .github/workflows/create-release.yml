@@ -1,27 +1,63 @@
-name: Release 3X-UI
+name: Create China-Optimized Release
 
 on:
   workflow_dispatch:
-  release:
-    types: [published]
-  push:
-    branches:
-      - main
-    tags:
-      - "v*.*.*"
-    paths:
-      - '**.js'
-      - '**.css'
-      - '**.html'
-      - '**.sh'
-      - '**.go'
-      - 'go.mod'
-      - 'go.sum'
-      - 'x-ui.service.debian'
-      - 'x-ui.service.rhel'
+    inputs:
+      version:
+        description: 'Release version (e.g., v2.5.2-china)'
+        required: true
+        default: 'v2.5.2-china'
 
 jobs:
-  build:
+  create-release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.event.inputs.version }}
+          name: "3X-UI China-Optimized ${{ github.event.inputs.version }}"
+          body: |
+            ## 🇨🇳 China-Optimized 3X-UI Release
+            
+            ### Features
+            ✅ **Smart Split DNS** - AliDNS for Chinese domains (10ms), DoH/DoT for international (50ms)
+            ✅ **Auto-Download China Geo Files** - Automatic geoip.dat and geosite.dat for China
+            ✅ **Intelligent Routing** - Chinese traffic direct, international via proxy
+            ✅ **Protocol Templates** - Pre-configured VLESS Reality, VMess/Trojan WS+TLS
+            ✅ **Zero Configuration** - Works out of the box
+            
+            ### Installation
+            ```bash
+            bash <(curl -Ls https://raw.githubusercontent.com/mrrifat/3x-ui/main/install.sh)
+            ```
+            
+            ### What's Changed
+            * Add China-optimized configuration with split DNS by @Copilot in #1
+            * Add DNS over HTTPS (DoH) and DNS over TLS (DoT) support by @Copilot in #3
+            * Add Smart DNS Provider Selector with Split DNS Routing by @Copilot in #5
+            * Rebrand README and installation commands by @Copilot in #6
+            * Fix all repository references to use mrrifat/3x-ui by @Copilot
+            
+            ### System Requirements
+            - Linux (Ubuntu/Debian/CentOS/Alpine)
+            - Architecture: amd64, arm64, armv7, armv6, 386, armv5, s390x
+            
+            ### Based On
+            Forked from [MHSanaei/3x-ui](https://github.com/MHSanaei/3x-ui) with China network optimizations.
+            
+            **Full Changelog**: https://github.com/mrrifat/3x-ui/commits/${{ github.event.inputs.version }}
+          draft: false
+          prerelease: false
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+  build-binaries:
+    needs: create-release
     permissions:
       contents: write
     strategy:
@@ -45,11 +81,12 @@ jobs:
           go-version-file: go.mod
           check-latest: true
 
-      - name: Build 3X-UI
+      - name: Build 3X-UI Binary
         run: |
           export CGO_ENABLED=1
           export GOOS=linux
           export GOARCH=${{ matrix.platform }}
+          
           # Use Bootlin prebuilt cross-toolchains (musl 1.2.5 in stable series)
           case "${{ matrix.platform }}" in
             amd64) BOOTLIN_ARCH="x86-64" ;;
@@ -60,10 +97,12 @@ jobs:
             386) BOOTLIN_ARCH="x86-i686" ;;
             s390x) BOOTLIN_ARCH="s390x-z13" ;;
           esac
+          
           echo "Resolving Bootlin musl toolchain for arch=$BOOTLIN_ARCH (platform=${{ matrix.platform }})"
           TARBALL_BASE="https://toolchains.bootlin.com/downloads/releases/toolchains/$BOOTLIN_ARCH/tarballs/"
           TARBALL_URL=$(curl -fsSL "$TARBALL_BASE" | grep -oE "${BOOTLIN_ARCH}--musl--stable-[^\"]+\\.tar\\.xz" | sort -r | head -n1)
           [ -z "$TARBALL_URL" ] && { echo "Failed to locate Bootlin musl toolchain for arch=$BOOTLIN_ARCH" >&2; exit 1; }
+          
           echo "Downloading: $TARBALL_URL"
           cd /tmp
           curl -fL -sS -o "$(basename "$TARBALL_URL")" "$TARBALL_BASE/$TARBALL_URL"
@@ -72,21 +111,23 @@ jobs:
           export PATH="$(realpath "$TOOLCHAIN_DIR")/bin:$PATH"
           export CC=$(realpath "$(find "$TOOLCHAIN_DIR/bin" -name '*-gcc.br_real' -type f -executable | head -n1)")
           [ -z "$CC" ] && { echo "No gcc.br_real found in $TOOLCHAIN_DIR/bin" >&2; exit 1; }
-          cd -
-          go build -ldflags "-w -s -linkmode external -extldflags '-static'" -o xui-release -v main.go
-          file xui-release
-          ldd xui-release || echo "Static binary confirmed"
           
+          cd -
+          echo "Building with CGO_ENABLED=$CGO_ENABLED GOOS=$GOOS GOARCH=$GOARCH CC=$CC"
+          go build -v -trimpath -ldflags "-s -w -buildid= -linkmode external -extldflags '-static'" -o xui main.go
+
+      - name: Package Binary
+        run: |
           mkdir x-ui
-          cp xui-release x-ui/
+          cp xui x-ui/
+          cp x-ui.sh x-ui/
           cp x-ui.service.debian x-ui/
           cp x-ui.service.rhel x-ui/
-          cp x-ui.sh x-ui/
-          mv x-ui/xui-release x-ui/x-ui
+          cp -r web x-ui/
           mkdir x-ui/bin
           cd x-ui/bin
           
-          # Download dependencies
+          # Download Xray dependencies
           Xray_URL="https://github.com/XTLS/Xray-core/releases/download/v25.12.8/"
           if [ "${{ matrix.platform }}" == "amd64" ]; then
             wget -q ${Xray_URL}Xray-linux-64.zip
@@ -126,89 +167,11 @@ jobs:
           wget -q -O geosite_RU.dat https://github.com/runetfreedom/russia-v2ray-rules-dat/releases/latest/download/geosite.dat
           mv xray xray-linux-${{ matrix.platform }}
           cd ../..
-          
-      - name: Package
-        run: tar -zcvf x-ui-linux-${{ matrix.platform }}.tar.gz x-ui
+          tar -czf x-ui-linux-${{ matrix.platform }}.tar.gz x-ui
 
-      - name: Upload files to Artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: x-ui-linux-${{ matrix.platform }}
-          path: ./x-ui-linux-${{ matrix.platform }}.tar.gz
-
-      - name: Upload files to GH release
+      - name: Upload Release Asset
         uses: softprops/action-gh-release@v2
-        if: startsWith(github.ref, 'refs/tags/v')
         with:
+          tag_name: ${{ github.event.inputs.version }}
           files: x-ui-linux-${{ matrix.platform }}.tar.gz
-          token: ${{ secrets.GITHUB_TOKEN }}
-
-  # =================================
-  #  Windows Build
-  # =================================
-  build-windows:
-    name: Build for Windows
-    permissions:
-      contents: write
-    strategy:
-      matrix:
-        platform:
-          - amd64
-    runs-on: windows-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v5
-
-      - name: Setup Go
-        uses: actions/setup-go@v6
-        with:
-          go-version-file: go.mod
-          check-latest: true
-
-      - name: Build 3X-UI for Windows
-        shell: pwsh
-        run: |
-          $env:CGO_ENABLED="1"
-          $env:GOOS="windows"
-          $env:GOARCH="amd64"
-          go build -ldflags "-w -s" -o xui-release.exe -v main.go
-          
-          mkdir x-ui
-          Copy-Item xui-release.exe x-ui\
-          mkdir x-ui\bin
-          cd x-ui\bin
-          
-          # Download Xray for Windows
-          $Xray_URL = "https://github.com/XTLS/Xray-core/releases/download/v25.12.8/"
-          Invoke-WebRequest -Uri "${Xray_URL}Xray-windows-64.zip" -OutFile "Xray-windows-64.zip"
-          Expand-Archive -Path "Xray-windows-64.zip" -DestinationPath .
-          Remove-Item "Xray-windows-64.zip"
-          Remove-Item geoip.dat, geosite.dat -ErrorAction SilentlyContinue
-          Invoke-WebRequest -Uri "https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geoip.dat" -OutFile "geoip.dat"
-          Invoke-WebRequest -Uri "https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geosite.dat" -OutFile "geosite.dat"
-          Invoke-WebRequest -Uri "https://github.com/chocolate4u/Iran-v2ray-rules/releases/latest/download/geoip.dat" -OutFile "geoip_IR.dat"
-          Invoke-WebRequest -Uri "https://github.com/chocolate4u/Iran-v2ray-rules/releases/latest/download/geosite.dat" -OutFile "geosite_IR.dat"
-          Invoke-WebRequest -Uri "https://github.com/runetfreedom/russia-v2ray-rules-dat/releases/latest/download/geoip.dat" -OutFile "geoip_RU.dat"
-          Invoke-WebRequest -Uri "https://github.com/runetfreedom/russia-v2ray-rules-dat/releases/latest/download/geosite.dat" -OutFile "geosite_RU.dat"
-          Rename-Item xray.exe xray-windows-amd64.exe
-          cd ..
-          Copy-Item -Path ..\windows_files\* -Destination . -Recurse
-          cd ..
-
-      - name: Package to Zip
-        shell: pwsh
-        run: |
-          Compress-Archive -Path .\x-ui -DestinationPath "x-ui-windows-amd64.zip"
-
-      - name: Upload files to Artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: x-ui-windows-amd64
-          path: ./x-ui-windows-amd64.zip
-
-      - name: Upload files to GH release
-        uses: softprops/action-gh-release@v2
-        if: startsWith(github.ref, 'refs/tags/v')
-        with:
-          files: x-ui-windows-amd64.zip
           token: ${{ secrets.GITHUB_TOKEN }}
