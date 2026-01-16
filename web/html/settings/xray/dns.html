@@ -103,14 +103,36 @@
                             </a-dropdown>
                         </template>
                         <template slot="address" slot-scope="dns,index">
-                            <span v-if="typeof dns == 'object'">[[ dns.address ]]</span>
+                            <div v-if="typeof dns == 'object'" :style="{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }">
+                                <span>[[ dns.address ]]</span>
+                                <a-tag v-if="dns.address.startsWith('https://')" color="blue" :style="{ fontSize: '10px', padding: '0 4px' }">DoH</a-tag>
+                                <a-tag v-else-if="dns.address.startsWith('tls://')" color="green" :style="{ fontSize: '10px', padding: '0 4px' }">DoT</a-tag>
+                                <a-tag v-else color="default" :style="{ fontSize: '10px', padding: '0 4px' }">UDP</a-tag>
+                            </div>
                             <span v-else>[[ dns ]]</span>
                         </template>
                         <template slot="domain" slot-scope="dns,index">
-                            <span v-if="typeof dns == 'object'">[[ dns.domains.join(",") ]]</span>
+                            <div v-if="typeof dns == 'object' && dns.domains && dns.domains.length > 0" :style="{ display: 'flex', alignItems: 'center', gap: '4px', flexWrap: 'wrap' }">
+                                <template v-for="domain in dns.domains">
+                                    <a-tag v-if="domain.includes('geosite:cn')" color="orange" :style="{ fontSize: '10px', margin: '2px' }">
+                                        🇨🇳 CN
+                                    </a-tag>
+                                    <a-tag v-else-if="domain.includes('geolocation-!cn')" color="purple" :style="{ fontSize: '10px', margin: '2px' }">
+                                        🌍 International
+                                    </a-tag>
+                                    <span v-else :style="{ fontSize: '11px', margin: '2px' }">[[ domain ]]</span>
+                                </template>
+                            </div>
                         </template>
                         <template slot="expectIPs" slot-scope="dns,index">
-                            <span v-if="typeof dns == 'object'">[[ dns.expectIPs.join(",") ]]</span>
+                            <div v-if="typeof dns == 'object' && dns.expectIPs && dns.expectIPs.length > 0" :style="{ display: 'flex', alignItems: 'center', gap: '4px', flexWrap: 'wrap' }">
+                                <template v-for="ip in dns.expectIPs">
+                                    <a-tag v-if="ip.includes('geoip:cn')" color="orange" :style="{ fontSize: '10px', margin: '2px' }">
+                                        🇨🇳 CN IPs
+                                    </a-tag>
+                                    <span v-else :style="{ fontSize: '11px', margin: '2px' }">[[ ip ]]</span>
+                                </template>
+                            </div>
                         </template>
                     </a-table>
                 </a-space>
